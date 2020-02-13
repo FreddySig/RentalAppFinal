@@ -343,7 +343,15 @@ public class RentalManagementApp {
 		mntmViewInventory.addActionListener(e -> {
 			int index = tblLocations.getSelectedRow();
 			if (index > -1) {
-				System.out.println(locationList.get(index).getName());
+				int id = (int)tblLocations.getValueAt(index, 0);
+				RentalLocations selectedLocation = null;
+				for (RentalLocations rl : locationList) {
+					if (rl.getId() == id) {
+						selectedLocation = rl;
+						break;
+					}
+				}
+				System.out.println(selectedLocation.getName());
 			} else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No location selected!", "View Inventory", JOptionPane.ERROR_MESSAGE);
 			}
