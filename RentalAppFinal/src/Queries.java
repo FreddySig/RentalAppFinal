@@ -23,11 +23,15 @@ public class Queries {
 	
 	public static ArrayList<RentalLocations> detailsByLoc(List<RentalLocations> list) {
 		String name = JOptionPane.showInputDialog(null, "Input location name");
+		if (name == null) name = "";
+		
 		return filterLocationsByName(list, name);
 	}
 	
 	public static DefaultTableModel ratesByLoc(List<RentalLocations> list) {
 		String name = JOptionPane.showInputDialog(null, "Input location name");
+		if (name == null) name = "";
+		
 		List<RentalLocations> locs = new ArrayList<>();
 		
 		for (RentalLocations r : list) {
@@ -74,7 +78,12 @@ public class Queries {
 	
 	
 	public static DefaultTableModel locsByZip(List<RentalLocations> list, Component frmRentalLocationManager) {
-		int zip = Integer.parseInt(JOptionPane.showInputDialog(frmRentalLocationManager, "Input Zip Code"));
+		int zip;
+		try {
+			zip = Integer.parseInt(JOptionPane.showInputDialog(frmRentalLocationManager, "Input Zip Code"));
+		} catch (NumberFormatException ex) {
+			return new DefaultTableModel();
+		}
 		String[] columns = { "Name", "Zip"};
 		List<String> locs = new ArrayList<>();
 
