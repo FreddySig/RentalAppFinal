@@ -33,7 +33,7 @@ public class RentalLocations implements Serializable {
 	public int availableVehicles() {
 		int availableVehicles = 0;
 		for(Vehicles vehicle : inventory ) {
-			if(vehicle.getStatus().equals("Available")) {
+			if(vehicle.getStatus() == Status.AVAILABLE) {
 				availableVehicles++;
 			}
 		}
@@ -44,7 +44,7 @@ public class RentalLocations implements Serializable {
 	public int rentedVehicles() {
 		int rentedVehicles = 0;
 		for(Vehicles vehicle : inventory ) {
-			if(vehicle.getStatus().equals("Rented")) {
+			if(vehicle.getStatus() == Status.RENTED) {
 				rentedVehicles++;
 			}
 		}
