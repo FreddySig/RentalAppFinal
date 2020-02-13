@@ -164,39 +164,19 @@ public class RentalManagementApp {
 		mnLocation.add(mntmNewLocation);
 		
 		JMenuItem mntmDeleteLocation = new JMenuItem("Delete Location");
-		mntmDeleteLocation.addActionListener(e -> {
-//			while (true) {
-//				int id = 0;
-//				
-//				try {
-//					String idIn = JOptionPane.showInputDialog(
-//							frmRentalLocationManager, "Enter ID of location to delete:", "Delete Location", JOptionPane.QUESTION_MESSAGE);
-//					if (idIn == null) break;
-//					id = Integer.parseInt(idIn);
-//				} catch (NumberFormatException ex) {
-//					JOptionPane.showMessageDialog(frmRentalLocationManager, "ID must be a number", "Invalid ID", JOptionPane.ERROR_MESSAGE);
-//					continue;
-//				}
-//				
-//				boolean locFound = false;
-//				for (RentalLocations rl : locationList) {
-//					if (rl.getId() == id) {
-//						locationList.remove(rl);
-//						updateTable(locationList);
-//						locFound = true;
-//						break;
-//					}
-//				}
-//				if (locFound) break;
-//				
-//				JOptionPane.showMessageDialog(frmRentalLocationManager, "Location not found.\nPlease check the ID.", "Location Not Found", JOptionPane.ERROR_MESSAGE);
-//			}
-			
+		mntmDeleteLocation.addActionListener(e -> {			
 			int index = tblLocations.getSelectedRow();
 			if (index > -1) {
 				RentalLocations rl = locationList.get(index);
-				int choice = JOptionPane.showConfirmDialog(frmRentalLocationManager, String.format("Are you sure you want to delete the location: %s?", rl.getName()), "Delete Location", JOptionPane.WARNING_MESSAGE);
-				
+				int choice = JOptionPane.showConfirmDialog(
+						frmRentalLocationManager, 
+						String.format("Are you sure you want to delete the location: %s?", rl.getName()), 
+						"Delete Location", 
+						JOptionPane.WARNING_MESSAGE);
+				if (choice == 0) {
+					locationList.remove(rl);
+					updateTable(locationList);
+				}
 			} else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No location selected!", "Delete Location", JOptionPane.ERROR_MESSAGE);
 			}
