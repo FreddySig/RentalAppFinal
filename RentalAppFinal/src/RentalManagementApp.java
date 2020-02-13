@@ -352,7 +352,8 @@ public class RentalManagementApp {
 		mntmByLocationName.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mntmByLocationName.addActionListener(e -> {
 			// Filter rates by a certain Location Name
-			tblLocations.setModel(Queries.ratesByLoc(locationList));
+			DefaultTableModel dtm = Queries.ratesByLoc(locationList);
+			if (dtm.getRowCount() > 0) tblLocations.setModel(dtm);
 			
 		});
 		mnLookupRentalRates.add(mntmByLocationName);
