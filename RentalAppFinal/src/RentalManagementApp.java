@@ -36,8 +36,6 @@ public class RentalManagementApp {
 	private JTable tblLocations;
 	private List<RentalLocations> locationList = new ArrayList<>();
 
-	// can you see this????
-	
 	/**
 	 * Launch the application.
 	 */
@@ -195,6 +193,8 @@ public class RentalManagementApp {
 		
 		JMenuItem mntmEditLocation = new JMenuItem("Edit Location");
 		mntmEditLocation.addActionListener(e -> {
+			
+			
 			while (true) {
 				int id = 0;
 				
