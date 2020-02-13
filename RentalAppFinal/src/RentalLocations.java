@@ -7,7 +7,6 @@ public class RentalLocations implements Serializable {
 	private static final long serialVersionUID = 8743507069010815384L;
 	private String name; // rental location name,cities for locations
 	private int id;
-	private String type = "";
 	private int zip;
 	private List<Vehicles> inventory;
 
