@@ -46,7 +46,7 @@ public class Queries {
 		for (int i = 0; i < locs.size(); i++) {
 			data[i][0] = locs.get(i).getId();
 			data[i][1] = locs.get(i).getName();
-			data[i][2] = locs.get(i).getRates();
+			//data[i][2] = locs.get(i).getRates();
 		}
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
@@ -70,7 +70,7 @@ public class Queries {
 		for (int i = 0; i < list.size(); i++) {
 			data[i][0] = list.get(i).getId();
 			data[i][1] = list.get(i).getName();
-			data[i][2] = "(" + list.get(i).getRentedVehicles() + " * " + list.get(i).getDailyRate() + ") = " + 
+			data[i][2] = "(" + list.get(i).rentedVehicles() + " * " + list.get(i).getDailyRate() + ") = " + 
 			NumberFormat.getCurrencyInstance().format(list.get(i).total());
 		}
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
