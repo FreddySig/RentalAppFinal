@@ -8,6 +8,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class Queries {
 	
+	//test
+	
 	public static DefaultTableModel availableV(List<RentalLocations> list) {
 		String[] columns = { "ID", "Name", "Available Vehicles" };
 		Object[][] data = new Object[list.size()][3];
