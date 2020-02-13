@@ -2,12 +2,12 @@ public class Vehicles {
 	private int vehicleId;
 	private String type;
 	private String plateNum;
-	private String status;
+	private Status status;
 	private int mpg;
 	private double fuelLevel;
 	private double rentRate;
 
-	public void Vehicles(String type, String plateNum, String status) {
+	public Vehicles(String type, String plateNum, Status status) {
 		this.type = type;
 		this.plateNum = plateNum;
 		this.status = status;
@@ -53,7 +53,7 @@ public class Vehicles {
 		return plateNum;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
