@@ -45,4 +45,16 @@ public class Vehicles {
 		this.rentRate = rentRate;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public String getPlateNum() {
+		return plateNum;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
 }
