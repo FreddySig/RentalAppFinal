@@ -36,6 +36,8 @@ public class RentalManagementApp {
 	private JTable tblLocations;
 	private List<RentalLocations> locationList = new ArrayList<>();
 
+	// can you see this????
+	
 	/**
 	 * Launch the application.
 	 */
