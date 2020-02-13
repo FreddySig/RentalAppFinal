@@ -59,6 +59,7 @@ public class Queries {
 				locs.add(r);
 			}
 		}
+		if (locs.size() == 0) return null;
 		return locs;
 	}
 	
@@ -77,27 +78,18 @@ public class Queries {
 	}
 	
 	
-	public static DefaultTableModel locsByZip(List<RentalLocations> list, Component frmRentalLocationManager) {
+	public static ArrayList<RentalLocations> locsByZip(List<RentalLocations> list, Component frmRentalLocationManager) {
 		int zip;
+		ArrayList<RentalLocations> output = new ArrayList<>();
 		try {
 			zip = Integer.parseInt(JOptionPane.showInputDialog(frmRentalLocationManager, "Input Zip Code"));
 		} catch (NumberFormatException ex) {
-			return new DefaultTableModel();
+			return null;
 		}
-		String[] columns = { "Name", "Zip"};
-		List<String> locs = new ArrayList<>();
-
-		for (RentalLocations r : list) {
-			locs = r.getLocs(zip, list);
-		}
-
-		Object[][] data = new Object[locs.size()][2];
-		for (int i = 0; i < locs.size(); i++) {
-			data[i][0] = locs.get(i);
-			data[i][1] = zip;
-		}
-		DefaultTableModel dtm = new DefaultTableModel(data, columns);
-		return dtm;
+		list.forEach(rl -> {
+			if (rl.getZip() == zip) output.add(rl);
+		});
+		return output;
 	}
 	
 	

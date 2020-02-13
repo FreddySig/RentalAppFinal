@@ -148,8 +148,13 @@ public class RentalManagementApp {
 		mntmByZipCode.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mnLookupLocations.add(mntmByZipCode);
 		mntmByZipCode.addActionListener(e ->{
-			DefaultTableModel dtm = Queries.locsByZip(locationList,frmRentalLocationManager);
-			if (dtm.getRowCount() > 0) tblLocations.setModel(dtm);
+			List<RentalLocations> list = Queries.locsByZip(locationList,frmRentalLocationManager);
+			if (list == null) return;
+			else if (list.size() > 0) updateTable(list);
+			else {
+				JOptionPane.showMessageDialog(frmRentalLocationManager, "No locations found with that ZIP.", "Lookup by ZIP", JOptionPane.INFORMATION_MESSAGE);
+				updateTable(locationList);
+			}
 		});
 						
 		JMenuItem mntmByName = new JMenuItem("by Name");
@@ -158,7 +163,12 @@ public class RentalManagementApp {
 		mntmByName.addActionListener(e -> {
 			// Filter rates by a certain Location Name
 			ArrayList<RentalLocations> list = Queries.detailsByLoc(locationList);
-			if (list.size() > 0) updateTable(list);
+			if (list == null) return;
+			else if (list.size() > 0) updateTable(list);
+			else {
+				JOptionPane.showMessageDialog(frmRentalLocationManager, "No locations found with that name.", "Lookup by Name", JOptionPane.INFORMATION_MESSAGE);
+				updateTable(locationList);
+			}
 		});
 		mnLocation.add(mntmNewLocation);
 		
