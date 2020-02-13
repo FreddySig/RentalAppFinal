@@ -1,6 +1,5 @@
 import java.util.List;
 
-import master.Vehicles;
 public class Customers {
 	private String name;
 	private int licenseNumber;
