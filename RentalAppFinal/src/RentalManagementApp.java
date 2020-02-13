@@ -322,7 +322,6 @@ public class RentalManagementApp {
 							}
 						}
 						
-						
 						updateTable(locationList);
 						locFound = true;
 						break;
