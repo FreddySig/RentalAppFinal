@@ -525,7 +525,7 @@ public class RentalManagementApp {
 				String city = txtCity.getText();
 				String state = txtState.getText();
 				
-				RentalLocations loc = new RentalLocations(nameIn, id, new Address(street, city, state, zip));
+				RentalLocations loc = new RentalLocations(nameIn, id, street, city, state, zip);
 
 				list.add(loc);
 				updateLocationTable(locationList);
