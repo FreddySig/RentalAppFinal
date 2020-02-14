@@ -7,10 +7,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Queries {
-	
+
 	int dailyRate;
-	
-	
+
 	public static DefaultTableModel availableV(List<RentalLocations> list) {
 		String[] columns = { "ID", "Name", "Available Vehicles" };
 		Object[][] data = new Object[list.size()][3];
@@ -23,38 +22,40 @@ public class Queries {
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
 	}
-	
+
 	public static ArrayList<RentalLocations> detailsByLoc(List<RentalLocations> list) {
 		String name = JOptionPane.showInputDialog(null, "Input location name");
-		if (name == null) name = "";
-		
+		if (name == null)
+			name = "";
+
 		return filterLocationsByName(list, name);
 	}
-	
+
 	public static DefaultTableModel ratesByLoc(List<RentalLocations> list) {
 		String name = JOptionPane.showInputDialog(null, "Input location name");
-		if (name == null) name = "";
-		
+		if (name == null)
+			name = "";
+
 		List<RentalLocations> locs = new ArrayList<>();
-		
+
 		for (RentalLocations r : list) {
 			if (r.getName().contentEquals(name)) {
 				locs.add(r);
 			}
 		}
-		
-		String[] columns = { "ID", "Name", "Daily Rate" };
+
+		String[] columns = { "ID", "Name", "Daily Rates by Type" };
 		Object[][] data = new Object[locs.size()][3];
 
 		for (int i = 0; i < locs.size(); i++) {
 			data[i][0] = locs.get(i).getId();
 			data[i][1] = locs.get(i).getName();
-			//data[i][2] = locs.get(i).getRates();
+			data[i][2] = locs.get(i).getRates(locs.get(i).getAddress().getZip());
 		}
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
 	}
-	
+
 	public static ArrayList<RentalLocations> filterLocationsByName(List<RentalLocations> list, String name) {
 		ArrayList<RentalLocations> locs = new ArrayList<>();
 		for (RentalLocations r : list) {
@@ -62,10 +63,11 @@ public class Queries {
 				locs.add(r);
 			}
 		}
-		if (locs.size() == 0) return null;
+		if (locs.size() == 0)
+			return null;
 		return locs;
 	}
-	
+
 	public static DefaultTableModel calculateRevenue(List<RentalLocations> list) {
 		String[] columns = { "ID", "Name", "Rented Vehicles", "Total Revenue" };
 		Object[][] data = new Object[list.size()][4];
@@ -79,7 +81,7 @@ public class Queries {
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
 	}
-	
+
 	public static ArrayList<RentalLocations> locsByZip(List<RentalLocations> list, Component frmRentalLocationManager) {
 		int zip;
 		ArrayList<RentalLocations> output = new ArrayList<>();
@@ -89,9 +91,20 @@ public class Queries {
 			return null;
 		}
 		list.forEach(rl -> {
-			if (rl.getAddress().getZip() == zip) output.add(rl);
+			if (rl.getAddress().getZip() == zip)
+				output.add(rl);
 		});
 		return output;
+	}
+
+	// Location name gives total # of vehicles
+	public static int totalVehicles(String name, List<RentalLocations> list) {
+		for (RentalLocations r : list) {
+			if (r.getName().equals(name)) {
+				return r.totalVehicles();
+			}
+		}
+		return 0;
 	}
 
 }
