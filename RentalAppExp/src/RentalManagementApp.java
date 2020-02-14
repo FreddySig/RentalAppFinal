@@ -7,11 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,10 +15,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -98,7 +91,7 @@ public class RentalManagementApp {
 		JButton btnResetView = new JButton("Reset View");
 		btnResetView.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnResetView.addActionListener(e -> {
-			updateLocationTable(locationList);
+			updateTable(locationList);
 		});
 		frmRentalLocationManager.getContentPane().add(btnResetView, BorderLayout.SOUTH);
 
@@ -123,7 +116,7 @@ public class RentalManagementApp {
 		mntmLoad.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mntmLoad.addActionListener(e -> {
 			locationList = loadData();
-			updateLocationTable(locationList);
+			updateTable(locationList);
 		});
 		mnFile.add(mntmLoad);
 		
@@ -157,10 +150,10 @@ public class RentalManagementApp {
 		mntmByZipCode.addActionListener(e ->{
 			List<RentalLocations> list = Queries.locsByZip(locationList,frmRentalLocationManager);
 			if (list == null) return;
-			else if (list.size() > 0) updateLocationTable(list);
+			else if (list.size() > 0) updateTable(list);
 			else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No locations found with that ZIP.", "Lookup by ZIP", JOptionPane.INFORMATION_MESSAGE);
-				updateLocationTable(locationList);
+				updateTable(locationList);
 			}
 		});
 						
@@ -171,10 +164,10 @@ public class RentalManagementApp {
 			// Filter rates by a certain Location Name
 			ArrayList<RentalLocations> list = Queries.detailsByLoc(locationList);
 			if (list == null) return;
-			else if (list.size() > 0) updateLocationTable(list);
+			else if (list.size() > 0) updateTable(list);
 			else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No locations found with that name.", "Lookup by Name", JOptionPane.INFORMATION_MESSAGE);
-				updateLocationTable(locationList);
+				updateTable(locationList);
 			}
 		});
 		mnLocation.add(mntmNewLocation);
@@ -191,7 +184,7 @@ public class RentalManagementApp {
 						JOptionPane.WARNING_MESSAGE);
 				if (choice == 0) {
 					locationList.remove(rl);
-					updateLocationTable(locationList);
+					updateTable(locationList);
 				}
 			} else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No location selected!", "Delete Location", JOptionPane.ERROR_MESSAGE);
@@ -274,8 +267,8 @@ public class RentalManagementApp {
 						pnlEditLocation.add(lblZipErr, c);
 						
 						txtName.setText(rl.getName());
-						txtVehicle.setText(String.format("%d", rl.rentedVehicles()));
-						txtZip.setText(String.format("%d", rl.getAddress().getZip()));
+						txtVehicle.setText(String.format("%d", rl.getRentedVehicles()));
+						txtZip.setText(String.format("%d", rl.getZip()));
 
 						boolean complete = false;
 						while (!complete) {
@@ -322,16 +315,16 @@ public class RentalManagementApp {
 								if (!complete) continue;
 								
 								rl.setName(nameIn);
-								//rl.setRentedVehicles(rentedVehicles);
-								rl.getAddress().setZip(zip);
+								rl.setRentedVehicles(rentedVehicles);
+								rl.setZip(zip);
 								
-								updateLocationTable(locationList);
+								updateTable(locationList);
 							} else {
 								complete = true;
 							}
 						}
 						
-						updateLocationTable(locationList);
+						updateTable(locationList);
 						locFound = true;
 						break;
 					}
@@ -346,7 +339,7 @@ public class RentalManagementApp {
 		mntmDeleteLocation.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mnLocation.add(mntmDeleteLocation);
 		
-		JMenuItem mntmViewInventory = new JMenuItem("Manage Inventory");
+		JMenuItem mntmViewInventory = new JMenuItem("View Inventory");
 		mntmViewInventory.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mntmViewInventory.addActionListener(e -> {
 			int index = tblLocations.getSelectedRow();
@@ -359,7 +352,7 @@ public class RentalManagementApp {
 						break;
 					}
 				}
-				ManageInventory(selectedLocation);
+				System.out.println(selectedLocation.getName());
 			} else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No location selected!", "View Inventory", JOptionPane.ERROR_MESSAGE);
 			}
@@ -406,7 +399,7 @@ public class RentalManagementApp {
 		frmRentalLocationManager.setLocationRelativeTo(null);
 		
 		locationList = loadData();
-		updateLocationTable(locationList);
+		updateTable(locationList);
 	}
 
 	private void newLocation(List<RentalLocations> list) {
@@ -433,50 +426,36 @@ public class RentalManagementApp {
 		c.gridy = 0;
 		pnlNewLocation.add(lblNameErr, c);
 
-		JLabel lblStreet = new JLabel("Street:");
-		c.gridx = 0;
-		c.gridy = 1;
-		pnlNewLocation.add(lblStreet, c);
-		
-		JTextField txtStreet = new JTextField(20);
-		c.gridx = 1;
-		c.gridy = 1;
-		pnlNewLocation.add(txtStreet, c);
-		
-		JLabel lblCity = new JLabel("City:");
+		JLabel lblVehicles = new JLabel("# of Rented Vehicles:");
 		c.gridx = 0;
 		c.gridy = 2;
-		pnlNewLocation.add(lblCity, c);
-		
-		JTextField txtCity = new JTextField(15);
+		pnlNewLocation.add(lblVehicles, c);
+
+		JTextField txtVehicle = new JTextField(20);
 		c.gridx = 1;
 		c.gridy = 2;
-		pnlNewLocation.add(txtCity, c);
-		
-		JLabel lblState = new JLabel("State:");
-		c.gridx = 0;
-		c.gridy = 3;
-		pnlNewLocation.add(lblState, c);
-		
-		JTextField txtState = new JTextField(15);
-		c.gridx = 1;
-		c.gridy = 3;
-		pnlNewLocation.add(txtState, c);
+		pnlNewLocation.add(txtVehicle, c);
+
+		JLabel lblVehiclesErr = new JLabel();
+		lblVehiclesErr.setForeground(Color.RED);
+		c.gridx = 2;
+		c.gridy = 2;
+		pnlNewLocation.add(lblVehiclesErr, c);
 
 		JLabel lblZip = new JLabel("ZIP Code:");
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 3;
 		pnlNewLocation.add(lblZip, c);
 
-		JTextField txtZip = new JTextField(15);
+		JTextField txtZip = new JTextField(20);
 		c.gridx = 1;
-		c.gridy = 4;
+		c.gridy = 3;
 		pnlNewLocation.add(txtZip, c);
 
 		JLabel lblZipErr = new JLabel();
 		lblZipErr.setForeground(Color.RED);
 		c.gridx = 2;
-		c.gridy = 4;
+		c.gridy = 3;
 		pnlNewLocation.add(lblZipErr, c);
 
 		boolean complete = false;
@@ -488,15 +467,24 @@ public class RentalManagementApp {
 			if (result == 0) {
 				
 				String nameIn = txtName.getText();
+				String rentedVehiclesIn = txtVehicle.getText();
 				String zipIn = txtZip.getText();
 				complete = true;
-				int zip = 0;
+				int rentedVehicles = 0, zip = 0;
 				
 				lblNameErr.setText("");
+				lblVehiclesErr.setText("");
 				lblZipErr.setText("");
 				
 				if (nameIn.length() < 6 || nameIn.length() > 20) {
 					lblNameErr.setText("* Must be between 6 and 20 characters");
+					complete = false;
+				}
+				
+				try {
+					rentedVehicles = Integer.parseInt(rentedVehiclesIn); 
+				} catch (NumberFormatException ex) {
+					lblVehiclesErr.setText("* Must be a number");
 					complete = false;
 				}
 				
@@ -521,195 +509,31 @@ public class RentalManagementApp {
 					id = 1;
 				}
 				
-				String street = txtStreet.getText();
-				String city = txtCity.getText();
-				String state = txtState.getText();
-				
-				RentalLocations loc = new RentalLocations(nameIn, id, new Address(street, city, state, zip));
+				RentalLocations loc = new RentalLocations(nameIn, rentedVehicles, id, zip);
 
 				list.add(loc);
-				updateLocationTable(locationList);
+				updateTable(locationList);
 			} else {
 				complete = true;
 			}
 		}
 	}
 
-	private void updateLocationTable(List<RentalLocations> list) {
-		String[] columns = { "ID", "Name", "ZIP Code", "Rented Vehicles", "Avail. Vehicles" };
-		Object[][] data = new Object[list.size()][5];
+	private void updateTable(List<RentalLocations> list) {
+		String[] columns = { "ID", "Name", "ZIP Code", "Rented Vehicles", "Avail. Vehicles", "Daily Rate" };
+		Object[][] data = new Object[list.size()][6];
 
 		for (int i = 0; i < list.size(); i++) {
 			data[i][0] = list.get(i).getId();
 			data[i][1] = list.get(i).getName();
-			data[i][2] = list.get(i).getAddress().getZip();
-			data[i][3] = list.get(i).rentedVehicles();
+			data[i][2] = list.get(i).getZip();
+			data[i][3] = list.get(i).getRentedVehicles();
 			data[i][4] = list.get(i).availableVehicles();
+			data[i][5] = String.format("$%.2f", list.get(i).getRates());
 		}
 
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		tblLocations.setModel(dtm);
-	}
-	
-	private void updateInventoryTable(List<Vehicles> list, JTable table) {
-		String[] columns = { "ID", "Type", "Plate", "MPG", "Fuel Level", "Rental Rate", "Status" };
-		Object[][] data = new Object[list.size()][7];
-		
-		for (int i = 0; i < list.size(); i++) {
-			data[i][0] = list.get(i).getVehicleId();
-			data[i][1] = list.get(i).getType();
-			data[i][2] = list.get(i).getPlateNum();
-			data[i][3] = list.get(i).getMpg();
-			data[i][4] = String.format("%.0f%%", (list.get(i).getFuelLevel() * 100));
-			data[i][5] = String.format("$%.2f", list.get(i).getDailyRate());
-			data[i][6] = list.get(i).getStatus();
-		}
-		
-		DefaultTableModel dtm = new DefaultTableModel(data, columns);
-		table.setModel(dtm);
-	}
-	
-	private void ManageInventory(RentalLocations rl) {
-		JFrame frmInventory = new JFrame("Manage Inventory");
-		frmInventory.setSize(600, 400);
-		frmInventory.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmInventory.setLocationRelativeTo(frmRentalLocationManager);
-		
-		frmInventory.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				updateLocationTable(locationList);
-			}
-		});
-		
-		JTable tblInventory = new JTable();
-		
-		frmInventory.addWindowFocusListener(new WindowFocusListener() {
-			@Override
-			public void windowGainedFocus(WindowEvent e) {
-				updateInventoryTable(rl.getInventory(), tblInventory);
-			}
-			@Override
-			public void windowLostFocus(WindowEvent e) {
-			}	
-		});
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setViewportView(tblInventory);
-		frmInventory.getContentPane().add(scrollPane);
-		
-		JButton btnNewVehicle = new JButton("New Vehicle");
-		btnNewVehicle.addActionListener(e -> {
-			createNewVehicle(rl);
-		});
-		frmInventory.add(btnNewVehicle, BorderLayout.SOUTH);
-		
-		frmInventory.setVisible(true);
-		
-		
-		// Get rid of this at some point
-//		for (int i = 0; i < 10; i++) {
-//			rl.getInventory().add(new Vehicles(VehicleType.CAR, "TEST", Status.AVAILABLE));
-//		}
-		
-		updateInventoryTable(rl.getInventory(), tblInventory);
-	}
-	
-	private void createNewVehicle(RentalLocations rl) {
-		JFrame frmNewVehicle = new JFrame("New Vehicle");
-		frmNewVehicle.setSize(400, 250);
-		frmNewVehicle.setLocationRelativeTo(frmRentalLocationManager);
-		frmNewVehicle.getContentPane().setLayout(new GridBagLayout());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.ipadx = 5;
-		c.ipady = 10;
-		
-		JLabel lblID = new JLabel("Vehicle ID:");
-		c.gridx = 0;
-		c.gridy= 0;
-		frmNewVehicle.add(lblID, c);
-		
-		JTextField txtID = new JTextField(15);
-		txtID.setEditable(false);
-		txtID.setText(String.format("%d", rl.totalVehicles() + 1));
-		c.gridx = 1;
-		c.gridy = 0;
-		frmNewVehicle.add(txtID, c);
-		
-		JLabel lblType = new JLabel("Type:");
-		c.gridx = 0;
-		c.gridy = 1;
-		frmNewVehicle.add(lblType, c);
-		
-		JComboBox<VehicleType> cmbType = new JComboBox<>(VehicleType.values());
-		c.gridx = 1;
-		c.gridy = 1;
-		frmNewVehicle.add(cmbType, c);
-		
-		JLabel lblPlate = new JLabel("Plate Number:");
-		c.gridx = 0;
-		c.gridy = 2;
-		frmNewVehicle.add(lblPlate, c);
-		
-		JTextField txtPlate = new JTextField(15);
-		c.gridx = 1;
-		c.gridy = 2;
-		frmNewVehicle.add(txtPlate, c);
-		
-		JLabel lblPlateErr = new JLabel();
-		lblPlateErr.setForeground(Color.RED);
-		c.gridx = 2;
-		c.gridy = 2;
-		frmNewVehicle.add(lblPlateErr, c);
-		
-		JLabel lblMPG = new JLabel("MPG:");
-		c.gridx = 0;
-		c.gridy = 3;
-		frmNewVehicle.add(lblMPG, c);
-		
-		JTextField txtMPG = new JTextField(15);
-		c.gridx = 1;
-		c.gridy = 3;
-		frmNewVehicle.add(txtMPG, c);
-		
-		JLabel lblMPGErr = new JLabel();
-		lblMPGErr.setForeground(Color.RED);
-		c.gridx = 2;
-		c.gridy = 3;
-		frmNewVehicle.add(lblMPGErr, c);
-		
-		JPanel pnlButtons = new JPanel();
-		
-		JButton btnRandomVehicle = new JButton("Random");
-		btnRandomVehicle.addActionListener(e -> {
-			rl.addToInventory(constructRandomVehicle(rl.totalVehicles() + 1));
-		});
-		pnlButtons.add(btnRandomVehicle);
-		
-		c.gridx = 0;
-		c.gridy = 4;
-		c.gridwidth = 3;
-		frmNewVehicle.add(pnlButtons, c);
-		
-		frmNewVehicle.setVisible(true);
-	}
-	
-	private Vehicles constructRandomVehicle(int id) {
-		Random rng = new Random();
-		
-		VehicleType type = VehicleType.values()[rng.nextInt(VehicleType.values().length)];
-		StringBuilder plate = new StringBuilder();
-		for (int i = 0; i < 3; i++) plate.append((char)(rng.nextInt(26) + 65));
-		for (int i = 0; i < 4; i++) plate.append(rng.nextInt(10));
-		Status status = Status.values()[rng.nextInt(Status.values().length)];
-		int mpg = rng.nextInt(16) + 15;
-		double fuel = rng.nextDouble();
-		
-		Vehicles v = new Vehicles(id, type, plate.toString(), status, mpg, fuel);
-		
-		return v;
 	}
 	
 	private boolean saveData(List<RentalLocations> list) {

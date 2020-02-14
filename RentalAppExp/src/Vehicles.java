@@ -1,25 +1,16 @@
-import java.io.Serializable;
-
-public class Vehicles implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
+public class Vehicles {
 	private int vehicleId;
-	private VehicleType type;
+	private String type;
 	private String plateNum;
 	private Status status;
 	private int mpg;
 	private double fuelLevel;
-	private double dailyRate;
+	private double rentRate;
 
-
-	public Vehicles(int vehicleId, VehicleType type, String plateNum, Status status, int mpg, double fuelLevel) {
-		super();
-		this.vehicleId = vehicleId;
+	public Vehicles(String type, String plateNum, Status status) {
 		this.type = type;
 		this.plateNum = plateNum;
 		this.status = status;
-		this.mpg = mpg;
-		this.fuelLevel = fuelLevel;
 	}
 
 	public int getVehicleId() {
@@ -46,7 +37,15 @@ public class Vehicles implements Serializable {
 		this.fuelLevel = fuelLevel;
 	}
 
-	public VehicleType getType() {
+	public double getRentRate() {
+		return rentRate;
+	}
+
+	public void setRentRate(double rentRate) {
+		this.rentRate = rentRate;
+	}
+
+	public String getType() {
 		return type;
 	}
 
@@ -57,15 +56,5 @@ public class Vehicles implements Serializable {
 	public Status getStatus() {
 		return status;
 	}
-	public double getDailyRate() {
-		return dailyRate;
-	}
-	 
-	public void setDailyRate(double dailyRate) {
-		this.dailyRate = dailyRate;
-	}
-	
-	
-
 
 }

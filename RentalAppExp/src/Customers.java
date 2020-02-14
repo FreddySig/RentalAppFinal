@@ -1,8 +1,6 @@
-import java.io.Serializable;
 import java.util.List;
 
-public class Customers implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class Customers {
 	private String name;
 	private int licenseNumber;
 	private List<Vehicles> rentedVehicle;
@@ -71,7 +69,7 @@ public class Customers implements Serializable {
 	public double total() {
 		double tot = 0.0;
 		for(Vehicles v: rentedVehicle) {
-			tot += v.getDailyRate();
+			tot += v.getRentRate();
 		}
 		return tot;
 	}

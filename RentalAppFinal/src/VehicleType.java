@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public enum VehicleType {
+public enum VehicleType implements Serializable {
 	CAR, TRUCK, VAN;
 
 	@Override

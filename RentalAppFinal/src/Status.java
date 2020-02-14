@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public enum Status {
+public enum Status implements Serializable {
 	AVAILABLE, RENTED, MAINTENANCE, DAMAGED;
 
 	@Override
