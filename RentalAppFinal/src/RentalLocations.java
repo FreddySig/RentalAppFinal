@@ -10,10 +10,10 @@ public class RentalLocations implements Serializable {
 	private Address add;
 	private List<Vehicles> inventory;
 
-	public RentalLocations(String name, int id, Address add) {
+	public RentalLocations(String name, int id, String street, String city,String state, int zip) {
 		this.name = name;
 		this.id = id;
-		this.add = add;
+		this.add = new Address(street,city,state,zip);
 		this.inventory = new ArrayList<>();
 	}
 
@@ -35,7 +35,7 @@ public class RentalLocations implements Serializable {
 
 	public void addToInventory(Vehicles vehicle) {
 		inventory.add(vehicle);
-		vehicle.setDailyRate(setRates());
+		setRates();
 	}
 
 	public int availableVehicles() {
@@ -110,66 +110,52 @@ public class RentalLocations implements Serializable {
 	}
 	
 	
-	public double setRates() {
+	public void setRates() {
 		int zip = add.getZip();
-		double total = 0.0;
 		for (Vehicles v : inventory) {
 			if (v.getType().toString().equalsIgnoreCase("car")) {
 				if ((zip >= 98001) && (zip <= 98099)) {
 					v.setDailyRate(15);
-					total += 15;
 				}
 				if ((zip >= 98100) && (zip <= 98199)) {
 					v.setDailyRate(12);
-					total += 12;
 				}
 				if ((zip >= 98200) && (zip <= 98299)) {
 					v.setDailyRate(19);
-					total += 19;
 				}
 				if ((zip >= 98300) && (zip <= 98399)) {
 					v.setDailyRate(27);
-					total += 27;
 				}
 			}
 			if (v.getType().toString().equalsIgnoreCase("truck")) {
 				if ((zip >= 98001) && (zip <= 98099)) {
 					v.setDailyRate(25);
-					total += 25;
 				}
 				if ((zip >= 98100) && (zip <= 98199)) {
 					v.setDailyRate(22);
-					total += 22;
 				}
 				if ((zip >= 98200) && (zip <= 98299)) {
 					v.setDailyRate(29);
-					total += 29;
 				}
 				if ((zip >= 98300) && (zip <= 98399)) {
 					v.setDailyRate(37);
-					total += 37;
 				}
 			}
 			if (v.getType().toString().equalsIgnoreCase("van")) {
 				if ((zip >= 98001) && (zip <= 98099)) {
 					v.setDailyRate(20);
-					total += 20;
 				}
 				if ((zip >= 98100) && (zip <= 98199)) {
 					v.setDailyRate(19);
-					total += 19;
 				}
 				if ((zip >= 98200) && (zip <= 98299)) {
 					v.setDailyRate(25);
-					total += 25;
 				}
 				if ((zip >= 98300) && (zip <= 98399)) {
 					v.setDailyRate(33);
-					total += 33;
 				}
 			}
 		}
-		return total;
 	}
 }
 
