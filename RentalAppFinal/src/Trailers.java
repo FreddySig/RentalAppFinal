@@ -1,9 +1,9 @@
 public class Trailers {
 	private int trailerId;
-	private String type;
+	private TrailerType type;
 	private String trailerStatus;
 	
-	public void Trailer(int trailerId, String type, String trailerStatus) {
+	public void Trailer(int trailerId, TrailerType type, String trailerStatus) {
 		this.trailerId = trailerId;
 		this.type = type;
 		this.trailerStatus = trailerStatus;
@@ -13,7 +13,7 @@ public class Trailers {
 		return trailerId;
 	}
 
-	public String getType() {
+	public TrailerType getType() {
 		return type;
 	}
 

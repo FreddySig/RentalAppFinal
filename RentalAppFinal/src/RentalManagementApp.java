@@ -267,7 +267,7 @@ public class RentalManagementApp {
 						pnlEditLocation.add(lblZipErr, c);
 						
 						txtName.setText(rl.getName());
-						txtVehicle.setText(String.format("%d", rl.getRentedVehicles()));
+						txtVehicle.setText(String.format("%d", rl.rentedVehicles()));
 						txtZip.setText(String.format("%d", rl.getZip()));
 
 						boolean complete = false;
@@ -315,7 +315,7 @@ public class RentalManagementApp {
 								if (!complete) continue;
 								
 								rl.setName(nameIn);
-								rl.setRentedVehicles(rentedVehicles);
+								//rl.setRentedVehicles(rentedVehicles);
 								rl.setZip(zip);
 								
 								updateTable(locationList);
@@ -509,7 +509,7 @@ public class RentalManagementApp {
 					id = 1;
 				}
 				
-				RentalLocations loc = new RentalLocations(nameIn, rentedVehicles, id, zip);
+				RentalLocations loc = new RentalLocations(nameIn, id, zip);
 
 				list.add(loc);
 				updateTable(locationList);
@@ -527,9 +527,9 @@ public class RentalManagementApp {
 			data[i][0] = list.get(i).getId();
 			data[i][1] = list.get(i).getName();
 			data[i][2] = list.get(i).getZip();
-			data[i][3] = list.get(i).getRentedVehicles();
+			data[i][3] = list.get(i).rentedVehicles();
 			data[i][4] = list.get(i).availableVehicles();
-			data[i][5] = String.format("$%.2f", list.get(i).getRates());
+			//data[i][5] = String.format("$%.2f", list.get(i).getRates());
 		}
 
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);

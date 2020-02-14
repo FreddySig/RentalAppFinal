@@ -7,7 +7,6 @@ public class RentalLocations implements Serializable {
 	private static final long serialVersionUID = 8743507069010815384L;
 	private String name; // rental location name,cities for locations
 	private int id;
-	private String type = "";
 	private int zip;
 	private List<Vehicles> inventory;
 
@@ -30,11 +29,19 @@ public class RentalLocations implements Serializable {
 	public void setZip(int zip) {
 		this.zip = zip;
 	}
+	
+	public List<Vehicles> getInventory() {
+		return inventory;
+	}
+	
+	public void addToInventory(Vehicles vehicle) {
+		inventory.add(vehicle);
+	}
 
 	public int availableVehicles() {
 		int availableVehicles = 0;
 		for(Vehicles vehicle : inventory ) {
-			if(vehicle.getStatus().equals("Available")) {
+			if(vehicle.getStatus() == Status.AVAILABLE) {
 				availableVehicles++;
 			}
 		}
@@ -45,7 +52,7 @@ public class RentalLocations implements Serializable {
 	public int rentedVehicles() {
 		int rentedVehicles = 0;
 		for(Vehicles vehicle : inventory ) {
-			if(vehicle.getStatus().equals("Rented")) {
+			if(vehicle.getStatus() == Status.RENTED) {
 				rentedVehicles++;
 			}
 		}
@@ -55,6 +62,14 @@ public class RentalLocations implements Serializable {
 	
 	public int totalVehicles() {
 		return inventory.size();
+	}
+	
+	public double totalRevenue() {
+		double total = 0;
+		for (Vehicles v : inventory) {
+			if (v.getStatus() == Status.RENTED) total += v.getRentRate();
+		}
+		return total;
 	}
 	
 

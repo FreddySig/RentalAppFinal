@@ -1,13 +1,13 @@
 public class Vehicles {
 	private int vehicleId;
-	private String type;
+	private VehicleType type;
 	private String plateNum;
 	private Status status;
 	private int mpg;
 	private double fuelLevel;
 	private double rentRate;
 
-	public Vehicles(String type, String plateNum, Status status) {
+	public Vehicles(VehicleType type, String plateNum, Status status) {
 		this.type = type;
 		this.plateNum = plateNum;
 		this.status = status;
@@ -45,7 +45,7 @@ public class Vehicles {
 		this.rentRate = rentRate;
 	}
 
-	public String getType() {
+	public VehicleType getType() {
 		return type;
 	}
 

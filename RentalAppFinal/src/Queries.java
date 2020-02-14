@@ -46,7 +46,7 @@ public class Queries {
 		for (int i = 0; i < locs.size(); i++) {
 			data[i][0] = locs.get(i).getId();
 			data[i][1] = locs.get(i).getName();
-			data[i][2] = locs.get(i).getRates();
+			//data[i][2] = locs.get(i).getRates();
 		}
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
@@ -64,14 +64,14 @@ public class Queries {
 	}
 	
 	public static DefaultTableModel calculateRevenue(List<RentalLocations> list) {
-		String[] columns = { "ID", "Name", "Rented Vehicles * Daily Rate  = Total Revenue" };
-		Object[][] data = new Object[list.size()][3];
+		String[] columns = { "ID", "Name", "Rented Vehicles", "Total Revenue" };
+		Object[][] data = new Object[list.size()][4];
 
 		for (int i = 0; i < list.size(); i++) {
 			data[i][0] = list.get(i).getId();
 			data[i][1] = list.get(i).getName();
-			data[i][2] = "(" + list.get(i).getRentedVehicles() + " * " + list.get(i).getDailyRate() + ") = " + 
-			NumberFormat.getCurrencyInstance().format(list.get(i).total());
+			data[i][2] = list.get(i).rentedVehicles();
+			data[i][3] = String.format("$%.2f", list.get(i).totalRevenue());
 		}
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
