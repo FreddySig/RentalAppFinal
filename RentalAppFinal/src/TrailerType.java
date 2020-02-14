@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public enum TrailerType {
+public enum TrailerType implements Serializable {
 	COVERED, UNCOVERED;
 
 	@Override

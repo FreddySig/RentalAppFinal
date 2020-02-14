@@ -1,11 +1,15 @@
-public class Vehicles {
+import java.io.Serializable;
+
+public class Vehicles implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private int vehicleId;
 	private VehicleType type;
 	private String plateNum;
 	private Status status;
 	private int mpg;
 	private double fuelLevel;
-	private int dailyRate;
+	private double dailyRate;
 
 
 	public Vehicles(int vehicleId, VehicleType type, String plateNum, Status status, int mpg, double fuelLevel) {
@@ -57,7 +61,7 @@ public class Vehicles {
 		return dailyRate;
 	}
 	 
-	public void setDailyRate(int dailyRate) {
+	public void setDailyRate(double dailyRate) {
 		this.dailyRate = dailyRate;
 	}
 	
