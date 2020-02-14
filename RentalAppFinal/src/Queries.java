@@ -87,7 +87,7 @@ public class Queries {
 			return null;
 		}
 		list.forEach(rl -> {
-			if (rl.getZip() == zip) output.add(rl);
+			if (rl.getAddress().getZip() == zip) output.add(rl);
 		});
 		return output;
 	}
