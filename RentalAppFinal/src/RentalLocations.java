@@ -10,10 +10,10 @@ public class RentalLocations implements Serializable {
 	private Address add;
 	private List<Vehicles> inventory;
 
-	public RentalLocations(String name, int id, String street, String city,String state, int zip) {
+	public RentalLocations(String name, int id, String street, String city, String state, int zip) {
 		this.name = name;
 		this.id = id;
-		this.add = new Address(street,city,state,zip);
+		this.add = new Address(street, city, state, zip);
 		this.inventory = new ArrayList<>();
 	}
 
@@ -91,15 +91,53 @@ public class RentalLocations implements Serializable {
 
 	// takes the list of vehicles and returns the total rate for all vehicles,
 	// available and at this location
-	public double getRates() {
-		double total = 0.0;
-		for (Vehicles v : inventory) {
-			total += v.getDailyRate();
+	public String getRates(int zip) {
+		String car = "";
+		String truck = "";
+		String van = "";
+		if ((zip >= 98001) && (zip <= 98099)) {
+			car = "$15/day";
 		}
-		return total;
+		if ((zip >= 98100) && (zip <= 98199)) {
+			car = "$12/day";
+		}
+		if ((zip >= 98200) && (zip <= 98299)) {
+			car = "$19/day";
+		}
+		if ((zip >= 98300) && (zip <= 98399)) {
+			car = "$27/day";
+		}
+		// truck
+		if ((zip >= 98001) && (zip <= 98099)) {
+			truck = "$25/day";
+		}
+		if ((zip >= 98100) && (zip <= 98199)) {
+			truck = "$22/day";
+		}
+		if ((zip >= 98200) && (zip <= 98299)) {
+			truck = "$29/day";
+		}
+		if ((zip >= 98300) && (zip <= 98399)) {
+			truck = "$37/day";
+		}
+		// van
+		if ((zip >= 98001) && (zip <= 98099)) {
+			van = "$20/day";
+		}
+		if ((zip >= 98100) && (zip <= 98199)) {
+			van = "$19/day";
+		}
+		if ((zip >= 98200) && (zip <= 98299)) {
+			van = "$25/day";
+		}
+		if ((zip >= 98300) && (zip <= 98399)) {
+			van = "$33/day";
+
+		}
+		return "Car:" + car + " Truck:" + truck + " Van:" + van;
 	}
-	
-	//for rented vehicles
+
+	// for rented vehicles
 	public double totalRevenue() {
 		double total = 0;
 		for (Vehicles v : inventory) {
@@ -108,8 +146,7 @@ public class RentalLocations implements Serializable {
 		}
 		return total;
 	}
-	
-	
+
 	public void setRates() {
 		int zip = add.getZip();
 		for (Vehicles v : inventory) {
