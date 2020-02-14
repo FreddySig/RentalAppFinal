@@ -35,7 +35,7 @@ public class RentalLocations implements Serializable {
 
 	public void addToInventory(Vehicles vehicle) {
 		inventory.add(vehicle);
-		setRates();
+		vehicle.setDailyRate(setRates());
 	}
 
 	public int availableVehicles() {

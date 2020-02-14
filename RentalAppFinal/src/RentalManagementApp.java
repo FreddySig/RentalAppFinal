@@ -7,8 +7,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,6 +20,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -429,36 +433,50 @@ public class RentalManagementApp {
 		c.gridy = 0;
 		pnlNewLocation.add(lblNameErr, c);
 
-		JLabel lblVehicles = new JLabel("# of Rented Vehicles:");
+		JLabel lblStreet = new JLabel("Street:");
+		c.gridx = 0;
+		c.gridy = 1;
+		pnlNewLocation.add(lblStreet, c);
+		
+		JTextField txtStreet = new JTextField(20);
+		c.gridx = 1;
+		c.gridy = 1;
+		pnlNewLocation.add(txtStreet, c);
+		
+		JLabel lblCity = new JLabel("City:");
 		c.gridx = 0;
 		c.gridy = 2;
-		pnlNewLocation.add(lblVehicles, c);
-
-		JTextField txtVehicle = new JTextField(20);
+		pnlNewLocation.add(lblCity, c);
+		
+		JTextField txtCity = new JTextField(15);
 		c.gridx = 1;
 		c.gridy = 2;
-		pnlNewLocation.add(txtVehicle, c);
-
-		JLabel lblVehiclesErr = new JLabel();
-		lblVehiclesErr.setForeground(Color.RED);
-		c.gridx = 2;
-		c.gridy = 2;
-		pnlNewLocation.add(lblVehiclesErr, c);
+		pnlNewLocation.add(txtCity, c);
+		
+		JLabel lblState = new JLabel("State:");
+		c.gridx = 0;
+		c.gridy = 3;
+		pnlNewLocation.add(lblState, c);
+		
+		JTextField txtState = new JTextField(15);
+		c.gridx = 1;
+		c.gridy = 3;
+		pnlNewLocation.add(txtState, c);
 
 		JLabel lblZip = new JLabel("ZIP Code:");
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 4;
 		pnlNewLocation.add(lblZip, c);
 
-		JTextField txtZip = new JTextField(20);
+		JTextField txtZip = new JTextField(15);
 		c.gridx = 1;
-		c.gridy = 3;
+		c.gridy = 4;
 		pnlNewLocation.add(txtZip, c);
 
 		JLabel lblZipErr = new JLabel();
 		lblZipErr.setForeground(Color.RED);
 		c.gridx = 2;
-		c.gridy = 3;
+		c.gridy = 4;
 		pnlNewLocation.add(lblZipErr, c);
 
 		boolean complete = false;
@@ -470,24 +488,15 @@ public class RentalManagementApp {
 			if (result == 0) {
 				
 				String nameIn = txtName.getText();
-				String rentedVehiclesIn = txtVehicle.getText();
 				String zipIn = txtZip.getText();
 				complete = true;
-				int rentedVehicles = 0, zip = 0;
+				int zip = 0;
 				
 				lblNameErr.setText("");
-				lblVehiclesErr.setText("");
 				lblZipErr.setText("");
 				
 				if (nameIn.length() < 6 || nameIn.length() > 20) {
 					lblNameErr.setText("* Must be between 6 and 20 characters");
-					complete = false;
-				}
-				
-				try {
-					rentedVehicles = Integer.parseInt(rentedVehiclesIn); 
-				} catch (NumberFormatException ex) {
-					lblVehiclesErr.setText("* Must be a number");
 					complete = false;
 				}
 				
@@ -512,7 +521,11 @@ public class RentalManagementApp {
 					id = 1;
 				}
 				
-				RentalLocations loc = new RentalLocations(nameIn, id, zip);
+				String street = txtStreet.getText();
+				String city = txtCity.getText();
+				String state = txtState.getText();
+				
+				RentalLocations loc = new RentalLocations(nameIn, id, new Address(street, city, state, zip));
 
 				list.add(loc);
 				updateLocationTable(locationList);
@@ -524,7 +537,7 @@ public class RentalManagementApp {
 
 	private void updateLocationTable(List<RentalLocations> list) {
 		String[] columns = { "ID", "Name", "ZIP Code", "Rented Vehicles", "Avail. Vehicles" };
-		Object[][] data = new Object[list.size()][6];
+		Object[][] data = new Object[list.size()][5];
 
 		for (int i = 0; i < list.size(); i++) {
 			data[i][0] = list.get(i).getId();
@@ -548,7 +561,7 @@ public class RentalManagementApp {
 			data[i][2] = list.get(i).getPlateNum();
 			data[i][3] = list.get(i).getMpg();
 			data[i][4] = String.format("%.0f%%", (list.get(i).getFuelLevel() * 100));
-			data[i][5] = String.format("$%.2f", list.get(i).getRentRate());
+			data[i][5] = String.format("$%.2f", list.get(i).getDailyRate());
 			data[i][6] = list.get(i).getStatus();
 		}
 		
@@ -571,8 +584,15 @@ public class RentalManagementApp {
 		
 		JTable tblInventory = new JTable();
 		
-		DefaultTableModel dtm = new DefaultTableModel(null, new String[]{"Test"});
-		tblInventory.setModel(dtm);
+		frmInventory.addWindowFocusListener(new WindowFocusListener() {
+			@Override
+			public void windowGainedFocus(WindowEvent e) {
+				updateInventoryTable(rl.getInventory(), tblInventory);
+			}
+			@Override
+			public void windowLostFocus(WindowEvent e) {
+			}	
+		});
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(tblInventory);
@@ -588,9 +608,9 @@ public class RentalManagementApp {
 		
 		
 		// Get rid of this at some point
-		for (int i = 0; i < 10; i++) {
-			rl.getInventory().add(new Vehicles(VehicleType.CAR, "TEST", Status.AVAILABLE));
-		}
+//		for (int i = 0; i < 10; i++) {
+//			rl.getInventory().add(new Vehicles(VehicleType.CAR, "TEST", Status.AVAILABLE));
+//		}
 		
 		updateInventoryTable(rl.getInventory(), tblInventory);
 	}
@@ -664,7 +684,7 @@ public class RentalManagementApp {
 		
 		JButton btnRandomVehicle = new JButton("Random");
 		btnRandomVehicle.addActionListener(e -> {
-			
+			rl.addToInventory(constructRandomVehicle(rl.totalVehicles() + 1));
 		});
 		pnlButtons.add(btnRandomVehicle);
 		
@@ -676,8 +696,20 @@ public class RentalManagementApp {
 		frmNewVehicle.setVisible(true);
 	}
 	
-	private Vehicles constructVehicle() {
-		return null;
+	private Vehicles constructRandomVehicle(int id) {
+		Random rng = new Random();
+		
+		VehicleType type = VehicleType.values()[rng.nextInt(VehicleType.values().length)];
+		StringBuilder plate = new StringBuilder();
+		for (int i = 0; i < 3; i++) plate.append((char)(rng.nextInt(26) + 65));
+		for (int i = 0; i < 4; i++) plate.append(rng.nextInt(10));
+		Status status = Status.values()[rng.nextInt(Status.values().length)];
+		int mpg = rng.nextInt(16) + 15;
+		double fuel = rng.nextDouble();
+		
+		Vehicles v = new Vehicles(id, type, plate.toString(), status, mpg, fuel);
+		
+		return v;
 	}
 	
 	private boolean saveData(List<RentalLocations> list) {
