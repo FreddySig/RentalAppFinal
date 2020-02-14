@@ -8,6 +8,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class Queries {
 	
+	int dailyRate;
+	
+	
 	public static DefaultTableModel availableV(List<RentalLocations> list) {
 		String[] columns = { "ID", "Name", "Available Vehicles" };
 		Object[][] data = new Object[list.size()][3];
@@ -76,7 +79,6 @@ public class Queries {
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		return dtm;
 	}
-	
 	
 	public static ArrayList<RentalLocations> locsByZip(List<RentalLocations> list, Component frmRentalLocationManager) {
 		int zip;

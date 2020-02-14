@@ -98,6 +98,8 @@ public class RentalLocations implements Serializable {
 		}
 		return list;
 	}
+	
+	public double getR
 
 	/*
 	 * // gets the rental rate given a name public void locRates(String name,
