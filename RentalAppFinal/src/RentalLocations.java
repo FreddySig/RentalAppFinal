@@ -29,6 +29,14 @@ public class RentalLocations implements Serializable {
 	public void setZip(int zip) {
 		this.zip = zip;
 	}
+	
+	public List<Vehicles> getInventory() {
+		return inventory;
+	}
+	
+	public void addToInventory(Vehicles vehicle) {
+		inventory.add(vehicle);
+	}
 
 	public int availableVehicles() {
 		int availableVehicles = 0;
@@ -54,6 +62,14 @@ public class RentalLocations implements Serializable {
 	
 	public int totalVehicles() {
 		return inventory.size();
+	}
+	
+	public double totalRevenue() {
+		double total = 0;
+		for (Vehicles v : inventory) {
+			if (v.getStatus() == Status.RENTED) total += v.getRentRate();
+		}
+		return total;
 	}
 	
 
