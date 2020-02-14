@@ -676,6 +676,10 @@ public class RentalManagementApp {
 		frmNewVehicle.setVisible(true);
 	}
 	
+	private Vehicles constructVehicle() {
+		return null;
+	}
+	
 	private boolean saveData(List<RentalLocations> list) {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("locations.data"))) {
 			oos.writeObject(list);
