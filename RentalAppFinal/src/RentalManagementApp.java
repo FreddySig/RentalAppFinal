@@ -316,7 +316,7 @@ public class RentalManagementApp {
 								
 								rl.setName(nameIn);
 								//rl.setRentedVehicles(rentedVehicles);
-								rl.setZip(zip);
+								rl.getAddress().setZip(zip);
 								
 								updateLocationTable(locationList);
 							} else {
