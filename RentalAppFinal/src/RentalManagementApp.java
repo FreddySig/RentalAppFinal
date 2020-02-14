@@ -74,7 +74,7 @@ public class RentalManagementApp {
 		frmRentalLocationManager = new JFrame();
 		frmRentalLocationManager.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 22));
 		frmRentalLocationManager.setTitle("Rental Location Manager");
-		frmRentalLocationManager.setBounds(100, 100, 800, 500);
+		frmRentalLocationManager.setBounds(100, 100, 1000, 500);
 		frmRentalLocationManager.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -534,15 +534,19 @@ public class RentalManagementApp {
 	}
 
 	private void updateLocationTable(List<RentalLocations> list) {
-		String[] columns = { "ID", "Name", "ZIP Code", "Rented Vehicles", "Avail. Vehicles" };
-		Object[][] data = new Object[list.size()][5];
+		String[] columns = { "Location ID", "Name", "Street Address", "City", "State", "ZIP Code", "Total Inventory", "Available", "Rented" };
+		Object[][] data = new Object[list.size()][9];
 
 		for (int i = 0; i < list.size(); i++) {
 			data[i][0] = list.get(i).getId();
 			data[i][1] = list.get(i).getName();
-			data[i][2] = list.get(i).getAddress().getZip();
-			data[i][3] = list.get(i).rentedVehicles();
-			data[i][4] = list.get(i).availableVehicles();
+			data[i][2] = list.get(i).getAddress().getStreet();
+			data[i][3] = list.get(i).getAddress().getCity();
+			data[i][4] = list.get(i).getAddress().getState();
+			data[i][5] = list.get(i).getAddress().getZip();
+			data[i][6] = list.get(i).totalVehicles();
+			data[i][7] = list.get(i).availableVehicles();
+			data[i][8] = list.get(i).rentedVehicles();
 		}
 
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
@@ -568,7 +572,7 @@ public class RentalManagementApp {
 	}
 	
 	private void ManageInventory(RentalLocations rl) {
-		JFrame frmInventory = new JFrame("Manage Inventory");
+		JFrame frmInventory = new JFrame("Manage Inventory for " + rl.getName());
 		frmInventory.setSize(600, 400);
 		frmInventory.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmInventory.setLocationRelativeTo(frmRentalLocationManager);
@@ -603,12 +607,6 @@ public class RentalManagementApp {
 		frmInventory.add(btnNewVehicle, BorderLayout.SOUTH);
 		
 		frmInventory.setVisible(true);
-		
-		
-		// Get rid of this at some point
-//		for (int i = 0; i < 10; i++) {
-//			rl.getInventory().add(new Vehicles(VehicleType.CAR, "TEST", Status.AVAILABLE));
-//		}
 		
 		updateInventoryTable(rl.getInventory(), tblInventory);
 	}
@@ -694,6 +692,12 @@ public class RentalManagementApp {
 			frmNewVehicle.dispatchEvent(new WindowEvent(frmNewVehicle, WindowEvent.WINDOW_CLOSING));
 		});
 		pnlButtons.add(btnOk);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(e -> {
+			frmNewVehicle.dispatchEvent(new WindowEvent(frmNewVehicle, WindowEvent.WINDOW_CLOSING));
+		});
+		pnlButtons.add(btnCancel);
 		
 		JButton btnRandomVehicle = new JButton("Random");
 		btnRandomVehicle.addActionListener(e -> {
