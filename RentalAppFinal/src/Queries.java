@@ -50,6 +50,7 @@ public class Queries {
 		for (int i = 0; i < locs.size(); i++) {
 			data[i][0] = locs.get(i).getId();
 			data[i][1] = locs.get(i).getName();
+
 			data[i][2] = locs.get(i).getRates(locs.get(i).getAddress().getZip());
 		}
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
