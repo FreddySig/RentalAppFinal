@@ -69,7 +69,7 @@ public class Customers {
 	public double total() {
 		double tot = 0.0;
 		for(Vehicles v: rentedVehicle) {
-			tot += v.getRentRate();
+			tot += v.getDailyRate();
 		}
 		return tot;
 	}
