@@ -47,5 +47,4 @@ public class Address implements Serializable {
 		this.zip = zip;
 	}
 	
-	//
 }
