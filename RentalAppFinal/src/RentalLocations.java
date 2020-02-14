@@ -10,10 +10,10 @@ public class RentalLocations implements Serializable {
 	private Address add;
 	private List<Vehicles> inventory;
 
-	public RentalLocations(String name, int id, Address add) {
+	public RentalLocations(String name, int id, String street, String city,String state, int zip) {
 		this.name = name;
 		this.id = id;
-		this.add = add;
+		this.add = new Address(street,city,state,zip);
 		this.inventory = new ArrayList<>();
 	}
 
