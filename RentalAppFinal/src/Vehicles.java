@@ -5,13 +5,17 @@ public class Vehicles {
 	private Status status;
 	private int mpg;
 	private double fuelLevel;
-	private double rentRate;
 	private int dailyRate;
 
-	public Vehicles(VehicleType type, String plateNum, Status status) {
+
+	public Vehicles(int vehicleId, VehicleType type, String plateNum, Status status, int mpg, double fuelLevel) {
+		super();
+		this.vehicleId = vehicleId;
 		this.type = type;
 		this.plateNum = plateNum;
 		this.status = status;
+		this.mpg = mpg;
+		this.fuelLevel = fuelLevel;
 	}
 
 	public int getVehicleId() {
@@ -38,14 +42,6 @@ public class Vehicles {
 		this.fuelLevel = fuelLevel;
 	}
 
-	public double getRentRate() {
-		return rentRate;
-	}
-
-	public void setRentRate(double rentRate) {
-		this.rentRate = rentRate;
-	}
-
 	public VehicleType getType() {
 		return type;
 	}
@@ -57,7 +53,7 @@ public class Vehicles {
 	public Status getStatus() {
 		return status;
 	}
-	public double getDailyRate(double dailyRate) {
+	public double getDailyRate() {
 		return dailyRate;
 	}
 	 
@@ -66,52 +62,6 @@ public class Vehicles {
 	}
 	
 	
-	public double getRates() {
-		int zip = 0;
-		
-		if (type.equalsIgnoreCase("car")) {
-			if ((zip >= 98001) && (zip <= 98099)) {
-				dailyRate = 15;
-			}
-			if ((zip >= 98100) && (zip <= 98199)) {
-				dailyRate = 12;
-			}
-			if ((zip >= 98200) &&(zip <= 98299)) {
-				dailyRate = 19;
-			}
-			if ((zip >= 98300) && (zip <= 98399)) {
-				dailyRate = 27;
-			}
-		}
-		if (type.equalsIgnoreCase("truck")) {
-			if ((zip >= 98001) && (zip <= 98099)) {
-				dailyRate = 25;
-			}
-			if ((zip >= 98100) && (zip <= 98199)) {
-				dailyRate = 22;
-			}
-			if ((zip >= 98200) &&(zip <= 98299)) {
-				dailyRate = 29;
-			}
-			if ((zip >= 98300) && (zip <= 98399)) {
-				dailyRate = 37;
-			}
-		}
-		if (type.equalsIgnoreCase("van")) {
-			if ((zip >= 98001) && (zip <= 98099)) {
-				dailyRate = 20;
-			}
-			if ((zip >= 98100) && (zip <= 98199)) {
-				dailyRate = 19;
-			}
-			if ((zip >= 98200) &&(zip <= 98299)) {
-				dailyRate = 25;
-			}
-			if ((zip >= 98300) && (zip <= 98399)) {
-				dailyRate = 33;
-			}
-		}
-		return dailyRate;
-	}
+
 
 }
