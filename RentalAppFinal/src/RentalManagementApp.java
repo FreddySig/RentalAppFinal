@@ -271,7 +271,7 @@ public class RentalManagementApp {
 						
 						txtName.setText(rl.getName());
 						txtVehicle.setText(String.format("%d", rl.rentedVehicles()));
-						txtZip.setText(String.format("%d", rl.getZip()));
+						txtZip.setText(String.format("%d", rl.getAddress().getZip()));
 
 						boolean complete = false;
 						while (!complete) {
@@ -319,7 +319,7 @@ public class RentalManagementApp {
 								
 								rl.setName(nameIn);
 								//rl.setRentedVehicles(rentedVehicles);
-								rl.setZip(zip);
+								rl.getAddress().setZip(zip);
 								
 								updateLocationTable(locationList);
 							} else {
@@ -529,7 +529,7 @@ public class RentalManagementApp {
 		for (int i = 0; i < list.size(); i++) {
 			data[i][0] = list.get(i).getId();
 			data[i][1] = list.get(i).getName();
-			data[i][2] = list.get(i).getZip();
+			data[i][2] = list.get(i).getAddress().getZip();
 			data[i][3] = list.get(i).rentedVehicles();
 			data[i][4] = list.get(i).availableVehicles();
 		}

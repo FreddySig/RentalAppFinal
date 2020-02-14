@@ -5,12 +5,17 @@ public class Vehicles {
 	private Status status;
 	private int mpg;
 	private double fuelLevel;
-	private double rentRate;
+	private int dailyRate;
 
-	public Vehicles(VehicleType type, String plateNum, Status status) {
+
+	public Vehicles(int vehicleId, VehicleType type, String plateNum, Status status, int mpg, double fuelLevel) {
+		super();
+		this.vehicleId = vehicleId;
 		this.type = type;
 		this.plateNum = plateNum;
 		this.status = status;
+		this.mpg = mpg;
+		this.fuelLevel = fuelLevel;
 	}
 
 	public int getVehicleId() {
@@ -37,14 +42,6 @@ public class Vehicles {
 		this.fuelLevel = fuelLevel;
 	}
 
-	public double getRentRate() {
-		return rentRate;
-	}
-
-	public void setRentRate(double rentRate) {
-		this.rentRate = rentRate;
-	}
-
 	public VehicleType getType() {
 		return type;
 	}
@@ -56,5 +53,15 @@ public class Vehicles {
 	public Status getStatus() {
 		return status;
 	}
+	public double getDailyRate() {
+		return dailyRate;
+	}
+	 
+	public void setDailyRate(int dailyRate) {
+		this.dailyRate = dailyRate;
+	}
+	
+	
+
 
 }

@@ -8,6 +8,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class Queries {
 	
+	int dailyRate;
+	
+	
 	public static DefaultTableModel availableV(List<RentalLocations> list) {
 		String[] columns = { "ID", "Name", "Available Vehicles" };
 		Object[][] data = new Object[list.size()][3];
@@ -77,7 +80,6 @@ public class Queries {
 		return dtm;
 	}
 	
-	
 	public static ArrayList<RentalLocations> locsByZip(List<RentalLocations> list, Component frmRentalLocationManager) {
 		int zip;
 		ArrayList<RentalLocations> output = new ArrayList<>();
@@ -87,7 +89,7 @@ public class Queries {
 			return null;
 		}
 		list.forEach(rl -> {
-			if (rl.getZip() == zip) output.add(rl);
+			if (rl.getAddress().getZip() == zip) output.add(rl);
 		});
 		return output;
 	}
