@@ -7,14 +7,14 @@ public class RentalLocations implements Serializable {
 	private static final long serialVersionUID = 8743507069010815384L;
 	private String name; // rental location name,cities for locations
 	private int id;
-	private int zip;
+	private Address add;
 	private List<Vehicles> inventory;
 
 
-	public RentalLocations(String name, int id, int zip) {
+	public RentalLocations(String name, int id, Address add) {
 		this.name = name;
 		this.id = id;
-		this.zip = zip;
+		this.add = add;
 		this.inventory = new ArrayList<>();
 	}
 
@@ -22,12 +22,12 @@ public class RentalLocations implements Serializable {
 		return id;
 	}
 
-	public int getZip() {
-		return zip;
+	public Address getAddress() {
+		return add;
 	}
 	
-	public void setZip(int zip) {
-		this.zip = zip;
+	public void setAddress(Address add) {
+		this.add = add;
 	}
 	
 	public List<Vehicles> getInventory() {
@@ -92,7 +92,7 @@ public class RentalLocations implements Serializable {
 	public List<String> getLocs(int zip, List<RentalLocations> r) {
 		List<String> list = new ArrayList<String>();
 		for (RentalLocations loc : r) {
-			if (loc.getZip() == zip) {
+			if (loc.getAddress().getZip() == zip) {
 				list.add(loc.getName());
 			}
 		}
