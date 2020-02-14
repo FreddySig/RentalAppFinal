@@ -7,6 +7,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -559,6 +562,13 @@ public class RentalManagementApp {
 		frmInventory.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmInventory.setLocationRelativeTo(frmRentalLocationManager);
 		
+		frmInventory.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				updateLocationTable(locationList);
+			}
+		});
+		
 		JTable tblInventory = new JTable();
 		
 		DefaultTableModel dtm = new DefaultTableModel(null, new String[]{"Test"});
@@ -568,13 +578,102 @@ public class RentalManagementApp {
 		scrollPane.setViewportView(tblInventory);
 		frmInventory.getContentPane().add(scrollPane);
 		
+		JButton btnNewVehicle = new JButton("New Vehicle");
+		btnNewVehicle.addActionListener(e -> {
+			createNewVehicle(rl);
+		});
+		frmInventory.add(btnNewVehicle, BorderLayout.SOUTH);
+		
 		frmInventory.setVisible(true);
 		
+		
+		// Get rid of this at some point
 		for (int i = 0; i < 10; i++) {
 			rl.getInventory().add(new Vehicles(VehicleType.CAR, "TEST", Status.AVAILABLE));
 		}
 		
 		updateInventoryTable(rl.getInventory(), tblInventory);
+	}
+	
+	private void createNewVehicle(RentalLocations rl) {
+		JFrame frmNewVehicle = new JFrame("New Vehicle");
+		frmNewVehicle.setSize(400, 250);
+		frmNewVehicle.setLocationRelativeTo(frmRentalLocationManager);
+		frmNewVehicle.getContentPane().setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.ipadx = 5;
+		c.ipady = 10;
+		
+		JLabel lblID = new JLabel("Vehicle ID:");
+		c.gridx = 0;
+		c.gridy= 0;
+		frmNewVehicle.add(lblID, c);
+		
+		JTextField txtID = new JTextField(15);
+		txtID.setEditable(false);
+		txtID.setText(String.format("%d", rl.totalVehicles() + 1));
+		c.gridx = 1;
+		c.gridy = 0;
+		frmNewVehicle.add(txtID, c);
+		
+		JLabel lblType = new JLabel("Type:");
+		c.gridx = 0;
+		c.gridy = 1;
+		frmNewVehicle.add(lblType, c);
+		
+		JComboBox<VehicleType> cmbType = new JComboBox<>(VehicleType.values());
+		c.gridx = 1;
+		c.gridy = 1;
+		frmNewVehicle.add(cmbType, c);
+		
+		JLabel lblPlate = new JLabel("Plate Number:");
+		c.gridx = 0;
+		c.gridy = 2;
+		frmNewVehicle.add(lblPlate, c);
+		
+		JTextField txtPlate = new JTextField(15);
+		c.gridx = 1;
+		c.gridy = 2;
+		frmNewVehicle.add(txtPlate, c);
+		
+		JLabel lblPlateErr = new JLabel();
+		lblPlateErr.setForeground(Color.RED);
+		c.gridx = 2;
+		c.gridy = 2;
+		frmNewVehicle.add(lblPlateErr, c);
+		
+		JLabel lblMPG = new JLabel("MPG:");
+		c.gridx = 0;
+		c.gridy = 3;
+		frmNewVehicle.add(lblMPG, c);
+		
+		JTextField txtMPG = new JTextField(15);
+		c.gridx = 1;
+		c.gridy = 3;
+		frmNewVehicle.add(txtMPG, c);
+		
+		JLabel lblMPGErr = new JLabel();
+		lblMPGErr.setForeground(Color.RED);
+		c.gridx = 2;
+		c.gridy = 3;
+		frmNewVehicle.add(lblMPGErr, c);
+		
+		JPanel pnlButtons = new JPanel();
+		
+		JButton btnRandomVehicle = new JButton("Random");
+		btnRandomVehicle.addActionListener(e -> {
+			
+		});
+		pnlButtons.add(btnRandomVehicle);
+		
+		c.gridx = 0;
+		c.gridy = 4;
+		c.gridwidth = 3;
+		frmNewVehicle.add(pnlButtons, c);
+		
+		frmNewVehicle.setVisible(true);
 	}
 	
 	private boolean saveData(List<RentalLocations> list) {
