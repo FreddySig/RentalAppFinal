@@ -46,4 +46,6 @@ public class Address implements Serializable {
 	public void setZip(int zip) {
 		this.zip = zip;
 	}
+	
+	//
 }
