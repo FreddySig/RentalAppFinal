@@ -7,8 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -682,6 +680,21 @@ public class RentalManagementApp {
 		
 		JPanel pnlButtons = new JPanel();
 		
+		JButton btnOk = new JButton("OK");
+		btnOk.addActionListener(e -> {
+			Vehicles v = new Vehicles(
+					Integer.parseInt(txtID.getText()), 
+					(VehicleType)cmbType.getSelectedItem(), 
+					txtPlate.getText(), 
+					Status.AVAILABLE, 
+					Integer.parseInt(txtMPG.getText()), 
+					1);
+			rl.addToInventory(v);
+			
+			frmNewVehicle.dispatchEvent(new WindowEvent(frmNewVehicle, WindowEvent.WINDOW_CLOSING));
+		});
+		pnlButtons.add(btnOk);
+		
 		JButton btnRandomVehicle = new JButton("Random");
 		btnRandomVehicle.addActionListener(e -> {
 			rl.addToInventory(constructRandomVehicle(rl.totalVehicles() + 1));
@@ -692,6 +705,8 @@ public class RentalManagementApp {
 		c.gridy = 4;
 		c.gridwidth = 3;
 		frmNewVehicle.add(pnlButtons, c);
+		
+		
 		
 		frmNewVehicle.setVisible(true);
 	}
