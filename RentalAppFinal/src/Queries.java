@@ -91,6 +91,5 @@ public class Queries {
 		});
 		return output;
 	}
-	
-	
+
 }

@@ -91,7 +91,7 @@ public class RentalManagementApp {
 		JButton btnResetView = new JButton("Reset View");
 		btnResetView.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnResetView.addActionListener(e -> {
-			updateTable(locationList);
+			updateLocationTable(locationList);
 		});
 		frmRentalLocationManager.getContentPane().add(btnResetView, BorderLayout.SOUTH);
 
@@ -116,7 +116,7 @@ public class RentalManagementApp {
 		mntmLoad.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mntmLoad.addActionListener(e -> {
 			locationList = loadData();
-			updateTable(locationList);
+			updateLocationTable(locationList);
 		});
 		mnFile.add(mntmLoad);
 		
@@ -150,10 +150,10 @@ public class RentalManagementApp {
 		mntmByZipCode.addActionListener(e ->{
 			List<RentalLocations> list = Queries.locsByZip(locationList,frmRentalLocationManager);
 			if (list == null) return;
-			else if (list.size() > 0) updateTable(list);
+			else if (list.size() > 0) updateLocationTable(list);
 			else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No locations found with that ZIP.", "Lookup by ZIP", JOptionPane.INFORMATION_MESSAGE);
-				updateTable(locationList);
+				updateLocationTable(locationList);
 			}
 		});
 						
@@ -164,10 +164,10 @@ public class RentalManagementApp {
 			// Filter rates by a certain Location Name
 			ArrayList<RentalLocations> list = Queries.detailsByLoc(locationList);
 			if (list == null) return;
-			else if (list.size() > 0) updateTable(list);
+			else if (list.size() > 0) updateLocationTable(list);
 			else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No locations found with that name.", "Lookup by Name", JOptionPane.INFORMATION_MESSAGE);
-				updateTable(locationList);
+				updateLocationTable(locationList);
 			}
 		});
 		mnLocation.add(mntmNewLocation);
@@ -184,7 +184,7 @@ public class RentalManagementApp {
 						JOptionPane.WARNING_MESSAGE);
 				if (choice == 0) {
 					locationList.remove(rl);
-					updateTable(locationList);
+					updateLocationTable(locationList);
 				}
 			} else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No location selected!", "Delete Location", JOptionPane.ERROR_MESSAGE);
@@ -318,13 +318,13 @@ public class RentalManagementApp {
 								//rl.setRentedVehicles(rentedVehicles);
 								rl.setZip(zip);
 								
-								updateTable(locationList);
+								updateLocationTable(locationList);
 							} else {
 								complete = true;
 							}
 						}
 						
-						updateTable(locationList);
+						updateLocationTable(locationList);
 						locFound = true;
 						break;
 					}
@@ -339,7 +339,7 @@ public class RentalManagementApp {
 		mntmDeleteLocation.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mnLocation.add(mntmDeleteLocation);
 		
-		JMenuItem mntmViewInventory = new JMenuItem("View Inventory");
+		JMenuItem mntmViewInventory = new JMenuItem("Manage Inventory");
 		mntmViewInventory.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		mntmViewInventory.addActionListener(e -> {
 			int index = tblLocations.getSelectedRow();
@@ -352,7 +352,7 @@ public class RentalManagementApp {
 						break;
 					}
 				}
-				System.out.println(selectedLocation.getName());
+				ManageInventory(selectedLocation);
 			} else {
 				JOptionPane.showMessageDialog(frmRentalLocationManager, "No location selected!", "View Inventory", JOptionPane.ERROR_MESSAGE);
 			}
@@ -399,7 +399,7 @@ public class RentalManagementApp {
 		frmRentalLocationManager.setLocationRelativeTo(null);
 		
 		locationList = loadData();
-		updateTable(locationList);
+		updateLocationTable(locationList);
 	}
 
 	private void newLocation(List<RentalLocations> list) {
@@ -512,15 +512,15 @@ public class RentalManagementApp {
 				RentalLocations loc = new RentalLocations(nameIn, id, zip);
 
 				list.add(loc);
-				updateTable(locationList);
+				updateLocationTable(locationList);
 			} else {
 				complete = true;
 			}
 		}
 	}
 
-	private void updateTable(List<RentalLocations> list) {
-		String[] columns = { "ID", "Name", "ZIP Code", "Rented Vehicles", "Avail. Vehicles", "Daily Rate" };
+	private void updateLocationTable(List<RentalLocations> list) {
+		String[] columns = { "ID", "Name", "ZIP Code", "Rented Vehicles", "Avail. Vehicles" };
 		Object[][] data = new Object[list.size()][6];
 
 		for (int i = 0; i < list.size(); i++) {
@@ -529,11 +529,52 @@ public class RentalManagementApp {
 			data[i][2] = list.get(i).getZip();
 			data[i][3] = list.get(i).rentedVehicles();
 			data[i][4] = list.get(i).availableVehicles();
-			//data[i][5] = String.format("$%.2f", list.get(i).getRates());
 		}
 
 		DefaultTableModel dtm = new DefaultTableModel(data, columns);
 		tblLocations.setModel(dtm);
+	}
+	
+	private void updateInventoryTable(List<Vehicles> list, JTable table) {
+		String[] columns = { "ID", "Type", "Plate", "MPG", "Fuel Level", "Rental Rate", "Status" };
+		Object[][] data = new Object[list.size()][7];
+		
+		for (int i = 0; i < list.size(); i++) {
+			data[i][0] = list.get(i).getVehicleId();
+			data[i][1] = list.get(i).getType();
+			data[i][2] = list.get(i).getPlateNum();
+			data[i][3] = list.get(i).getMpg();
+			data[i][4] = String.format("%.0f%%", (list.get(i).getFuelLevel() * 100));
+			data[i][5] = String.format("$%.2f", list.get(i).getRentRate());
+			data[i][6] = list.get(i).getStatus();
+		}
+		
+		DefaultTableModel dtm = new DefaultTableModel(data, columns);
+		table.setModel(dtm);
+	}
+	
+	private void ManageInventory(RentalLocations rl) {
+		JFrame frmInventory = new JFrame("Manage Inventory");
+		frmInventory.setSize(600, 400);
+		frmInventory.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmInventory.setLocationRelativeTo(frmRentalLocationManager);
+		
+		JTable tblInventory = new JTable();
+		
+		DefaultTableModel dtm = new DefaultTableModel(null, new String[]{"Test"});
+		tblInventory.setModel(dtm);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(tblInventory);
+		frmInventory.getContentPane().add(scrollPane);
+		
+		frmInventory.setVisible(true);
+		
+		for (int i = 0; i < 10; i++) {
+			rl.getInventory().add(new Vehicles(VehicleType.CAR, "TEST", Status.AVAILABLE));
+		}
+		
+		updateInventoryTable(rl.getInventory(), tblInventory);
 	}
 	
 	private boolean saveData(List<RentalLocations> list) {
